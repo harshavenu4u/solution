@@ -1,0 +1,85 @@
+1) select sum(weight) from picked where plantfk in (select plantid from plant where name="corn");
++-------------+
+| sum(weight) |
++-------------+
+|       17.54 |
++-------------+
+
+3)alter table gardener add column exper int(30);
+Query OK, 0 rows affected, 1 warning (0.87 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> desc gardener;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| gardenerid | int(11)     | NO   | PRI | NULL    |       |
+| name       | varchar(30) | YES  |     | NULL    |       |
+| age        | int(11)     | YES  |     | NULL    |       |
+| exper      | int(30)     | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+
+alter table gardener modify exper varchar(30);
+Query OK, 4 rows affected (2.65 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> desc gardener;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| gardenerid | int(11)     | NO   | PRI | NULL    |       |
+| name       | varchar(30) | YES  |     | NULL    |       |
+| age        | int(11)     | YES  |     | NULL    |       |
+| exper      | varchar(30) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+
+
+
+4)select name from plant where plantid=(select plantfk from planted where seeds<20 and date1 like "%14");
++--------+
+| name   |
++--------+
+| Carrot |
++--------+
+
+5) select name,sunlight,water from plant where name like 'c%' or name like 'r%';
++--------+----------+-------+
+| name   | sunlight | water |
++--------+----------+-------+
+| Carrot |     0.26 |  0.82 |
+| Corn   |     0.44 |  0.76 |
+| Radish |     0.28 |  0.84 |
+
+6) select p.name,pl.seeds from plant p join planted pl where p.plantid=pl.plantfk group by name order by name;
++---------+-------+
+| name    | seeds |
++---------+-------+
+| Beet    |    36 |
+| Carrot  |    28 |
+| Corn    |    20 |
+| Lettuce |    30 |
+| Radish  |    30 |
+| Tomato  |    38 |
++---------+-------+
+
+
+7)select pk.amount/pd.seeds as avg from picked pk join planted pd where pk.plantfk=pd.plantfk group by pk.plantfk;
++--------+
+| avg    |
++--------+
+| 1.0000 |
+| 2.6000 |
+| 0.3947 |
+| 0.7667 |
++--------+
+
+8) select g.name,p.name,p1.date1,p1.amount from picked p1 join gardener g on p1.gardenerfk=g.gardenerid join plant p on p1.plantfk=p.plantid where g.name="tim" and p1.amount>20;
++------+--------+------------+--------+
+| name | name   | date1      | amount |
++------+--------+------------+--------+
+| Tim  | Carrot | 2012-08-18 |     28 |
+| Tim  | Radish | 2012-07-16 |     23 |
++------+--------+------------+--------+
+
+9)select name from gardener where gardenerid in (select pl.gardenerfk from planted pl join picked pi on pl.plantfk=pi.plantfk);
+
