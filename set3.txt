@@ -83,3 +83,13 @@ mysql> desc gardener;
 
 9)select name from gardener where gardenerid in (select pl.gardenerfk from planted pl join picked pi on pl.plantfk=pi.plantfk);
 
+10)create view display as select distinct p1.name from picked p join location l on p.locationfk=l.locationid join plant p1 on p1.plantid=p.plantfk where l.name<>"west" and month(date1)<>7;
+ 
+-->select * from display;
++--------+
+| name   |
++--------+
+| Carrot |
+| Corn   |
+| Tomato |
++--------+
