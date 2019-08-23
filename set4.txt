@@ -49,6 +49,8 @@
 | Sarah Martinez   | Gone with the wind      |     4 | 2011-01-27 |
 +------------------+-------------------------+-------+------------+
 
+6)select r.name,m.title from movie m inner join rating ra on m.mID=ra.mID inner join reviewer r on r.rID=ra.rID group by ra.rID,ra.mID having count(stars)>1 and stars=(select stars from rating ra group by ra.rID,ra.mID having ratingDate=max(ratingDate)) ;
+
 7) select title,max(stars) from  movie m join rating rt on m.mid=rt.mid group by title;
 +-------------------------+------------+
 | title                   | max(stars) |
@@ -142,6 +144,11 @@
 | James Cameron    |
 | Ashley White     |
 +------------------+
+18)select title,director from movie where director in(select director from movie group by director having count(mID)>1) order by director,title;
+
+19)select m.title,avg(stars) as average from movie m inner join rating ra on m.mID=ra.mID group by m.mID having average>=(select avg(stars) from rating);
+
+20)select m.title,avg(stars) as average from movie m inner join rating ra on m.mID=ra.mID group by m.mID having average<(select avg(stars) from rating);
 
 21)select director,stars from (select m.director,rt.stars,row_number() over (partition by director order by stars desc) as rn from rating rt inner join movie m on rt.mid=m.mid) as a where rn=1 and director is not null;
 +------------------+-------+

@@ -5,6 +5,8 @@
 |       17.54 |
 +-------------+
 
+2)update picked set locationFK=(select locationid from location where name='North' ) where plantFK=3 and gardenerFK=3;
+
 3)alter table gardener add column exper int(30);
 Query OK, 0 rows affected, 1 warning (0.87 sec)
 Records: 0  Duplicates: 0  Warnings: 1
