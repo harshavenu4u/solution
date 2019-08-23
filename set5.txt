@@ -1,0 +1,75 @@
+
+1.select name from highschooler inner join (select id1 from friend f inner join highschooler hs on f.id2=hs.id where name="gabriel" ) as a on id=a.id1;
+
+
+
+
+2.
+
+select h1.name,h1.grade,h2.name,h2.grade from likes l join highschooler h1 on l.id1=h1.id join highschooler h2 on l.id2=h2.id where (h1.grade-h2.grade)>=2;
+
+
+3.
+
+select name,grade from highschooler where id in (select a.id2 from likes a join likes b on a.id1=b.id2 and a.id2=b.id1) group by name,grade order by name,grade;
+
+
+4.
+
+select name,grade from highschooler where id not in (select id1 from likes) and id not in (select id2 from likes) order by grade,name;
+
+5.
+
+select name,grade from highschooler h join likes l on id=id2 where id2 not in (select id1 from likes) group by name,grade;
+
+6.
+
+select h1.name,h1.grade,h2.name,h2.grade from friend l join highschooler h1 on l.id1=h1.id join highschooler h2 on l.id2=h2.id where h1.grade=h2.grade order by h1.grade,h1.name;
+
+
+7.
+
+
+
+
+8.
+
+select a-b as difference from ((select count(*) a from highschooler) a1,(select count(distinct name) b from highschooler) a2) ;
+
+
+9.
+
+select name,grade from highschooler where id in(select id2 from likes group by id2 having count(id1)>1);
+
+
+10.
+
+select name,grade from likes a join likes b join highschooler h on h.id=a.id1 or h.id=a.id2 or h.id=b.id1 where a.id1=b.id2 and a.id2!=b.id1;
+
+
+11.
+
+select h1.name,h1.grade,h2.name,h2.grade from friend l join highschooler h1 on l.id1=h1.id join highschooler h2 on l.id2=h2.id where h1.grade!=h2.grade;
+
+
+12.
+
+select avg(c) average_per_student from (select count(id1) c from friend group by id2) a;
+
+13.
+
+select count(distinct f2.id1)+count(distinct f2.id2) as fof from highschooler join friend f1  on id=f1.id1 join friend f2 on f1.id2=f2.id1 and id!=f2.id2 where name='Cassandra';
+
+
+14.
+
+select name,grade from highschooler h join friend f on id=id2 group by id1 having count(id1)=(select max(c) from (select count(id1) c from friend f join highschooler h on id1=id group by name,id1) a);
+
+
+
+
+
+
+
+
+
