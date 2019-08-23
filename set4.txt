@@ -1,0 +1,154 @@
+1)  select title from movie where director="steven spielberg";
++-------------------------+
+| title                   |
++-------------------------+
+| E.T                     |
+| Raiders of the Lost Ark |
++-------------------------+
+
+2)select  distinct m.year from movie m join rating r on m.mid=r.mid where stars in(4,5) order by year;
++------+
+| year |
++------+
+| 1937 |
+| 1939 |
+| 1981 |
++------+
+
+3)select title from movie where mid not in (select mid from rating);
++-----------+
+| title     |
++-----------+
+| Star Wars |
+| Titanic   |
++-----------+
+
+4)select name from reviewer where rid in (select rid from rating where ratingdate is null);
++---------------+
+| name          |
++---------------+
+| Daniel Lewis  |
+| Chris Jackson |
++---------------+
+
+5)  select r.name,m.title,rt.stars,rt.ratingdate from reviewer r join rating rt on r.rid=rt.rid join movie m on m.mid=rt.mid order by r.name, m.title,rt.stars;
++------------------+-------------------------+-------+------------+
+| name             | title                   | stars | ratingdate |
++------------------+-------------------------+-------+------------+
+| Ashley White     | E.T                     |     3 | 2011-01-02 |
+| Brittany Harris  | Raiders of the Lost Ark |     2 | 2011-01-30 |
+| Brittany Harris  | Raiders of the Lost Ark |     4 | 2011-01-12 |
+| Brittany Harris  | The Sound of Music      |     2 | 2011-01-20 |
+| Chris Jackson    | E.T                     |     2 | 2011-01-22 |
+| Chris Jackson    | Raiders of the Lost Ark |     4 | NULL       |
+| Chris Jackson    | The Sound of Music      |     3 | 2011-01-27 |
+| Daniel Lewis     | Snow White              |     4 | NULL       |
+| Elizabeth Thomas | Snow White              |     5 | 2011-01-19 |
+| Mike Anderson    | Gone with the wind      |     3 | 2011-01-09 |
+| Sarah Martinez   | Gone with the wind      |     2 | 2011-01-22 |
+| Sarah Martinez   | Gone with the wind      |     4 | 2011-01-27 |
++------------------+-------------------------+-------+------------+
+
+7) select title,max(stars) from  movie m join rating rt on m.mid=rt.mid group by title;
++-------------------------+------------+
+| title                   | max(stars) |
++-------------------------+------------+
+| Gone with the wind      |          4 |
+| Snow White              |          5 |
+| The Sound of Music      |          3 |
+| Raiders of the Lost Ark |          4 |
+| E.T                     |          3 |
++-------------------------+------------+
+
+8)select m.title, max(stars)-min(stars) as ratingspread from movie m join rating rt on m.mid=rt.mid group by m.title order by ratingspread desc,title;
++-------------------------+--------------+
+| title                   | ratingspread |
++-------------------------+--------------+
+| avatar                  |            2 |
+| Gone with the wind      |            2 |
+| Raiders of the Lost Ark |            2 |
+| E.T                     |            1 |
+| Snow White              |            1 |
+| The Sound of Music      |            1 |
++-------------------------+--------------+
+
+10) select distinct r.name from rating rt join reviewer r on r.rid= rt.rid join movie m on m.mid=rt.mid where title="gone with the wind";
++----------------+
+| name           |
++----------------+
+| Sarah Martinez |
+| Mike Anderson  |
++----------------+
+
+11) select r.name,m.title,rt.stars from rating rt join reviewer r on r.rid=rt.rid join movie m on m.mid=rt.mid where m.director=r.name;
++---------------+--------+-------+
+| name          | title  | stars |
++---------------+--------+-------+
+| James Cameron | avatar |     5 |
++---------------+--------+-------+
+
+12) select distinct r.name,m.title  from rating rt join reviewer r on r.rid=rt.rid join movie m on m.mid=rt.mid order by r.name,m.title;
++------------------+-------------------------+
+| name             | title                   |
++------------------+-------------------------+
+| Ashley White     | E.T                     |
+| Brittany Harris  | Raiders of the Lost Ark |
+| Brittany Harris  | The Sound of Music      |
+| Chris Jackson    | E.T                     |
+| Chris Jackson    | Raiders of the Lost Ark |
+| Chris Jackson    | The Sound of Music      |
+| Daniel Lewis     | Snow White              |
+| Elizabeth Thomas | avatar                  |
+| Elizabeth Thomas | Snow White              |
+| James Cameron    | avatar                  |
+| Mike Anderson    | Gone with the wind      |
+| Sarah Martinez   | Gone with the wind      |
++------------------+-------------------------+
+
+13) select m.title from movie m where m.mid not in(select rt.mid from rating rt join reviewer r on r.rid=rt.rid  where r.name="chris jackson");
++--------------------+
+| title              |
++--------------------+
+| Gone with the wind |
+| Star Wars          |
+| Titanic            |
+| Snow White         |
+| avatar             |
++--------------------+
+1)select distinct m.title from rating rt join reviewer r on r.rid=rt.rid join movie m on m.mid=rt.mid where r.name<>"chris jackson";
+
+15) select r.name,m.title,rt.stars from rating rt  join reviewer r on r.rid=rt.rid join movie m on m.mid=rt.mid where rt.stars=(select min(stars) from rating);
+
+16)select m.title,avg(rt.stars) as average from rating rt join movie m on rt.mid=m.mid group by m.title order by average,m.title desc  ;
++-------------------------+---------+
+| title                   | average |
++-------------------------+---------+
+| The Sound of Music      |  2.5000 |
+| E.T                     |  2.5000 |
+| Gone with the wind      |  3.0000 |
+| Raiders of the Lost Ark |  3.3333 |
+| avatar                  |  4.0000 |
+| Snow White              |  4.5000 |
++-------------------------+---------+
+
+17) select r.name from rating rt join reviewer r on rt.rid=r.rid group by r.rid having count(r.rid)<3 ;
++------------------+
+| name             |
++------------------+
+| Sarah Martinez   |
+| Daniel Lewis     |
+| Mike Anderson    |
+| Elizabeth Thomas |
+| James Cameron    |
+| Ashley White     |
++------------------+
+
+21)select director,stars from (select m.director,rt.stars,row_number() over (partition by director order by stars desc) as rn from rating rt inner join movie m on rt.mid=m.mid) as a where rn=1 and director is not null;
++------------------+-------+
+| director         | stars |
++------------------+-------+
+| james cameron    |     5 |
+| Robert Wise      |     3 |
+| Steven Spielberg |     4 |
+| Victor Fleming   |     4 |
++------------------+-------+
