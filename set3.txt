@@ -4,6 +4,12 @@
 +-------------+
 |       17.54 |
 +-------------+
+ select sum(p.weight) from picked p join plant p1 on p.plantid=p1.plantid where p1.name='corn';
++---------------+
+| sum(p.weight) |
++---------------+
+|         17.54 |
++---------------+
 
 2)update picked set locationFK=(select locationid from location where name='North' ) where plantFK=3 and gardenerFK=3;
 
@@ -37,12 +43,8 @@ mysql> desc gardener;
 
 
 
-4)select name from plant where plantid=(select plantfk from planted where seeds<20 and date1 like "%14");
-+--------+
-| name   |
-+--------+
-| Carrot |
-+--------+
+4)select p.name from plant p join planted pi on p.plantid=pi.plantid where pi.seeds<20 and month(date1)=5 and day(date1)=14;
+Empty set (0.00 sec)
 
 5) select name,sunlight,water from plant where name like 'c%' or name like 'r%';
 +--------+----------+-------+
@@ -85,13 +87,16 @@ mysql> desc gardener;
 
 9)select name from gardener where gardenerid in (select pl.gardenerfk from planted pl join picked pi on pl.plantfk=pi.plantfk);
 
-10)create view display as select distinct p1.name from picked p join location l on p.locationfk=l.locationid join plant p1 on p1.plantid=p.plantfk where l.name<>"west" and month(date1)<>7;
- 
--->select * from display;
+10) create view plant_table as select distinct p.name from plant p inner join picked pi on p.plantid=pi.plantid inner join location l on  pi.locationid=l.locationid where l.name!="west" and month(date1)="08";
+Query OK, 0 rows affected (0.57 sec)
+
+mysql> select * from plant_table;
 +--------+
 | name   |
 +--------+
 | Carrot |
+| Radish |
 | Corn   |
 | Tomato |
 +--------+
+4 rows in set (0.02 sec)
