@@ -145,27 +145,27 @@ select * from booking where date_from like '%09%';
 | Brownstone Hotel |     898 |
 | Clairmont Hotel  |     257 |
 +------------------+---------+
+select h.name,r.room_no from  room r left join booking b on  r.room_no=b.room_no inner join hotel h on h.hotel_no=r.hotel_no where b.room_no is null;
++------------------+---------+
+| name             | room_no |
++------------------+---------+
+| Empire Hotel     |     313 |
+| Park Place       |    1289 |
+| Brownstone Hotel |     876 |
+| Brownstone Hotel |     898 |
+| Clairmont Hotel  |     257 |
++------------------+---------+
 
 13)
-select h.name,h.city,max(price) from hotel h join room r on h.hotel_no=r.hotel_no group by h.name;
-+------------------+----------+------------+
-| name             | city     | max(price) |
-+------------------+----------+------------+
-| Empire Hotel     | New York |        145 |
-| Park Place       | New York |        195 |
-| Brownstone Hotel | Toronto  |        124 |
-| James Plaza      | Toronto  |        180 |
-| Devon Hotel      | Boston   |        175 |
-| Clairmont Hotel  | Boston   |        155 |
-+------------------+----------+------------+
+ select h.name,h.city from (select room_no,hotel_no,price,dense_rank() over(order by price desc) as max_price from room )as a inner join hotel h on a.hotel_no=h.hotel_no   where max_price=1;
++------------+----------+
+| name       | city     |
++------------+----------+
+| Park Place | New York |
++------------+----------+
+1 row in set (0.00 sec)
 
-14) select h.name,r.room_no,h.city,r.price from  hotel h join room r on h.hotel_no=r.hotel_no where r.price < (select min(price) from hotel h join  room r on h.hotel_no=r.hotel_no where city="boston");
-+------------------+---------+---------+-------+
-| name             | room_no | city    | price |
-+------------------+---------+---------+-------+
-| Brownstone Hotel |     876 | Toronto |   124 |
-| Brownstone Hotel |     898 | Toronto |   124 |
-+------------------+---------+---------+-------+
+14)  select h.name,r.room_No,h.city,r.price from room as r inner join hotel as h on r.hotel_No=h.hotel_No where r.price < (select min(m.price) from room m inner join hotel h on m.hotel_no=h.hotel_no where h.name="brownstone");
 
 15) select h.city,avg(price) from hotel h join room r on h.hotel_no=r.hotel_no group by h.city;
 +----------+------------+
