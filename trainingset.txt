@@ -1,0 +1,98 @@
+create table author(author_id varchar(8) primary key,auhtor_name varchar(25),author_country char(10),author_city char(15),publish_id varchar(8));
+
+ insert into author values("aut001","william norton","uk","cambridge","pb01");
+ insert into author values("aut002","c.j.wilde","usa","san francisco","pb04");
+ insert into author values("aut003","john betjeman hunter","russia","moscow","pb01");
+ insert into author values("aut004","john betjeman hunter","canada","toronto","pb03");
+ insert into author values("aut005","s.b.swaminathan","india","delhi","pb01");
+ insert into author values("aut006","bulter andre","uk","london","pb03");
+insert into author values("aut007","e.howard","europe","berlin","pb03");
+ insert into author values("aut008","andrew jeff","germany","berlin","pb02");
+insert into author values("aut009","derk talior","australia","melbourne","pb01");
+insert into author values("aut010","mary coffing","usa","new jersey,"pb04");   
+ insert into author values("aut010","mary coffing","usa","new jersey","pb04");
+
+create table publisher(publish_id varchar(5) primary key,publish_name varchar(25),publish_city char(10),publish_start_date date,branches int(3));
+
+
+ insert into publisher values("pb01","jex max publication","berlin",str_to_date('4/21/1929','%m/%d/%Y'),10);
+ insert into publisher values("pb02","summer night publication","canada",str_to_date('8/31/2019','%m/%d/%Y'),25);
+ insert into publisher values("pb03","novel publication ltd","london",str_to_date('8/10/2018','%m/%d/%Y'),11);
+ insert into publisher values("pb04","mark book sales","new jersey",str_to_date('5/24/2008',,'%m/%d/%Y')9);
+
+1) select * from publisher as p inner join author as a on p.publish_id=a.publish_id where p.publish_city<>a.author_city and p.publish_city=a.author_country;
+
+2)
+
+3) select a.author_id,a.author_name,a.author_country,a.author_city ,p. publish_name,p.publish_name,p.publish_city  from publisher p join author a on p.publish_id=a.publish_id where author_country in
+ (select author_country from publisher p join author a on p.publish_id=a.publish_id where a.author_city=p.publish_city);
++-----------+----------------+----------------+---------------+-----------------------+-----------------------+--------------+
+| author_id | author_name    | author_country | author_city   | publish_name          | publish_name          | publish_city |
++-----------+----------------+----------------+---------------+-----------------------+-----------------------+--------------+
+| aut001    | william norton | uk             | cambridge     | jex max publication   | jex max publication   | berlin       |
+| aut002    | c.j.wilde      | usa            | san francisco | mark book sales       | mark book sales       | new jersey   |
+| aut006    | bulter andre   | uk             | london        | novel publication ltd | novel publication ltd | london       |
+| aut010    | mary coffing   | usa            | new jersey    | mark book sales       | mark book sales       | new jersey   |
++-----------+----------------+----------------+---------------+-----------------------+-----------------------+--------------+
+4 rows in set (0.00 sec)
+
+4)
+
+5)select a.author_name from author as a left join  publisher as p on p.publish_city=a.author_city or p.publish_city=a.author_country where p.publish_city is null;
++----------------------+
+| author_name          |
++----------------------+
+| william norton       |
+| c.j.wilde            |
+| john betjeman hunter |
+| s.b.swaminathan      |
+| derk talior          |
++----------------------+
+5 rows in set (0.00 sec)
+
+6)select author_name from author where author_name like any (select substring(publish_name,1,1) from publisher);
+
+7)select author_name from author where author_name like '_._.%';
++-----------------+
+| author_name     |
++-----------------+
+| c.j.wilde       |
+| s.b.swaminathan |
++-----------------+
+
+8)select author_name from author where author_name not like '_.%';
++----------------------+
+| author_name          |
++----------------------+
+| william norton       |
+| john betjeman hunter |
+| john betjeman hunter |
+| bulter andre         |
+| andrew jeff          |
+| derk talior          |
+| mary coffing         |
++----------------------+
+
+9)
+
+
+
+
+							DataSet-2
+
+
+
+
+create table trip(trip_id varchar(5),trip_source char(5),trip_destination char(5),trip_start_time time,trip_end_time time,trip_cost int(8),dynamic_fare char(2));
+
+insert into trip values("tp01","CHN","BGL","13:40","15:40",3500,"Y");
+insert into trip values("tp02","BGL","MUM","18:20","19:20",6700,"Y");
+insert into trip values("tp03","CHN","HYD","9:45","11:10",3000,"Y");
+insert into trip values("tp04","HYD","BGL","12:20","13:25",2700,"N");
+insert into trip values("tp05","MUM","NDL","23:00","1:25",4500,"Y");
+insert into trip values("tp06","BGL","NDL","19:40","22:10",5000,"N");
+insert into trip values("tp07","NDL","MUM","16:45","17:50",6000,"Y");
+insert into trip values("tp08","MUM","BGL","20:20","23:45",5000,"N");
+insert into trip values("tp09","NDL","HYD","11:25","13:45",3000,"N");
+insert into trip values("tp10","HYD","CHN","20:30","22:20",4500,"Y");
+insert into trip values("tp11","BGL","CHN","23:45","1:05",3900,"Y");
