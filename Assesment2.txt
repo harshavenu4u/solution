@@ -1,0 +1,162 @@
+1)  select e.emp_id,e.emp_name,
+    ->      case when d.role_typ="lead" then "team lead" when d.desc_name is null then "unknown designation" else d.desc_name end as desc_name,
+    ->       case when p.place_desc="newyork" then "usa" when p.place_desc is null then "others" else p.place_desc end as place_desc ,
+    ->        case when pi.proj_name is null then "unknown Project" else pi.proj_name end as proj_name from employee e left join  designation d on e.desc_id=d.desc_id
+    ->          left join place1 p on p.place_id=e.place_id left join  project pi on pi.proj_id=e.proj_id;
++--------+-------------+---------------------+------------+-----------------+
+| emp_id | emp_name    | desc_name           | place_desc | proj_name       |
++--------+-------------+---------------------+------------+-----------------+
+|      4 | Santhosh    | SSE                 | Bangalore  | Cigna           |
+|      8 | Shalini     | SE                  | Bangalore  | ASG             |
+|      5 | Kribakaran  | SE                  | Hyderabad  | ASG             |
+|     13 | Karthick    | unknown designation | usa        | ASG             |
+|      1 | Vijaykumar  | ASE                 | Chennai    | Pepsi           |
+|      6 | Divya       | team lead           | usa        | Pepsi           |
+|      7 | Suganya     | ASE                 | Hyderabad  | Microsoft       |
+|      2 | Raja        | SE                  | Hyderabad  | Microsoft       |
+|      9 | Avantika    | SSE                 | Chennai    | Amazon          |
+|      3 | Abhishek    | ASE                 | Mexico     | Amazon          |
+|     14 | Sanjay      | unknown designation | others     | Amazon          |
+|     10 | Ajay        | team lead           | others     | unknown Project |
+|     11 | Tamilselvan | unknown designation | others     | unknown Project |
+|     12 | Vinodha     | unknown designation | others     | unknown Project |
+|     15 | Meera       | unknown designation | others     | unknown Project |
++--------+-------------+---------------------+------------+-----------------+
+15 rows in set (0.00 sec)
+
+
+2)select e.emp_id,e.emp_name, case when d.role_typ="developer" and p.place_typ="offshore" then "teammember" 
+				 when d.role_typ="developer" and p.place_typ="nearshore" then "teamlead" 
+				 when d.role_typ="developer" and p.place_typ="onshore" then "BA"
+				 when d.role_typ="lead" and p.place_typ="onshore" then "scrummaster"
+			  when d.role_typ is null and p.place_typ is null then "contractor" else "shadow" end as project_role 
+from employee e left join designation d on e.desc_id=d.desc_id left join place1 p on e.place_id=p.place_id;
+
+
+
++--------+-------------+--------------+
+| emp_id | emp_name    | project_role |
++--------+-------------+--------------+
+|      1 | Vijaykumar  | teammember   |
+|      9 | Avantika    | teammember   |
+|      8 | Shalini     | teammember   |
+|      4 | Santhosh    | teammember   |
+|      7 | Suganya     | teammember   |
+|      2 | Raja        | teammember   |
+|      5 | Kribakaran  | teammember   |
+|      3 | Abhishek    | teamlead     |
+|      6 | Divya       | scrummaster  |
+|     13 | Karthick    | shadow       |
+|     10 | Ajay        | shadow       |
+|     11 | Tamilselvan | contractor   |
+|     12 | Vinodha     | contractor   |
+|     14 | Sanjay      | contractor   |
+|     15 | Meera       | contractor   |
++--------+-------------+--------------+
+15 rows in set (0.00 sec)
+
+
+3) select
+    -> CASE WHEN d.ROLE_TYP='DEVELOPER' THEN D.ROLE_TYP ELSE 'OTHERS' END AS DERV_ROLE_TYP,
+    -> CASE WHEN d.ROLE_TYP ='DEVELOPER'  THEN p.PLACE_DESC ELSE 'OTHERS' END AS DERV_PLACE_DESC ,
+    -> CASE WHEN d.ROLE_TYP='DEVELOPER' THEN pr.PROJ_NAME ELSE 'OTHERS'  END AS DERV_PROJ_DESC,
+    -> count(e.emp_id) from Employee as e
+    -> left  join Designation as d
+    -> on e.DESC_ID=d.DESC_ID and d.ROLE_TYP='DEVELOPER'
+    -> left  join Place1 as p
+    -> on e.PLACE_ID=p.PLACE_ID
+    -> left  join Project as pr  on
+    ->  e.PROJ_ID=pr.PROJ_ID
+    ->  group by DERV_ROLE_TYP,DERV_PLACE_DESC,DERV_PROJ_DESC ;
++---------------+-----------------+----------------+-----------------+
+| DERV_ROLE_TYP | DERV_PLACE_DESC | DERV_PROJ_DESC | count(e.emp_id) |
++---------------+-----------------+----------------+-----------------+
+| DEVELOPER     | Bangalore       | Cigna          |               1 |
+| DEVELOPER     | Bangalore       | ASG            |               1 |
+| DEVELOPER     | Hyderabad       | ASG            |               1 |
+| OTHERS        | OTHERS          | OTHERS         |               7 |
+| DEVELOPER     | Chennai         | Pepsi          |               1 |
+| DEVELOPER     | Hyderabad       | Microsoft      |               2 |
+| DEVELOPER     | Chennai         | Amazon         |               1 |
+| DEVELOPER     | Mexico          | Amazon         |               1 |
++---------------+-----------------+----------------+-----------------+
+
+
+4)select case when e.emp_name is null then "others" else e.emp_name end as emp_name, 
+	case when d.desc_name is null then "unknown desgination" else d.desc_name end as desc_name, 
+	case when p.place_desc is null then "others" else p.place_desc end as place_desc, 
+	case when pi.proj_name is null then "un known project" else pi.proj_name end as proj_name from
+	 employee e left join designation d on  e.desc_id=d.desc_id left join place1 p on e.place_id=p.place_id left join project pi on e.proj_id=pi.proj_id;
++-------------+---------------------+------------+------------------+
+| emp_name    | desc_name           | place_desc | proj_name        |
++-------------+---------------------+------------+------------------+
+| Santhosh    | SSE                 | Bangalore  | Cigna            |
+| Shalini     | SE                  | Bangalore  | ASG              |
+| Kribakaran  | SE                  | Hyderabad  | ASG              |
+| Karthick    | unknown desgination | Newyork    | ASG              |
+| Vijaykumar  | ASE                 | Chennai    | Pepsi            |
+| Divya       | TL                  | Newyork    | Pepsi            |
+| Suganya     | ASE                 | Hyderabad  | Microsoft        |
+| Raja        | SE                  | Hyderabad  | Microsoft        |
+| Avantika    | SSE                 | Chennai    | Amazon           |
+| Abhishek    | ASE                 | Mexico     | Amazon           |
+| Sanjay      | unknown desgination | others     | Amazon           |
+| Ajay        | AM                  | others     | un known project |
+| Tamilselvan | unknown desgination | others     | un known project |
+| Vinodha     | unknown desgination | others     | un known project |
+| Meera       | unknown desgination | others     | un known project |
++-------------+---------------------+------------+------------------+
+
+5)select s.salesman_name,c.cust_name,c.city as customer_city,s.city as salesman_city from customer c left join sales s on  c.salesman_id=s.salesman_id where c.city!=S.city;
++---------------+-----------+---------------+---------------+
+| salesman_name | cust_name | customer_city | salesman_city |
++---------------+-----------+---------------+---------------+
+| raju          | ricky     | chennai       | hyderabad     |
+| srinath       | amaran    | chennai       | mumbai        |
++---------------+-----------+---------------+---------------+
+2 rows in set (0.00 sec)
+
+6)select  s.Salesman_Name,s.City,s.Monthly_Target,sum(Purchased_Amount) as Amount_purchase_by_Customer
+    -> from  Customer as c   inner join Sales as s on c.Salesman_id=s.Salesman_id
+    -> group by s.Salesman_Name,s.City,s.Monthly_Target having Amount_purchase_by_Customer>=s.Monthly_Target;
++---------------+-----------+----------------+-----------------------------+
+| Salesman_Name | City      | Monthly_Target | Amount_purchase_by_Customer |
++---------------+-----------+----------------+-----------------------------+
+| john          | chennai   |          10000 |                       10000 |
+| raju          | hyderabad |          21000 |                       23000 |
+| srinath       | mumbai    |           9000 |                        9000 |
+| vijay         | chennai   |           4000 |                        5000 |
++---------------+-----------+----------------+-----------------------------+
+
+
+7)select Cust_Name, City,Priority_num,Purchased_amount from(
+ select Cust_Name, City,Priority_num,Purchased_amount,row_number() over (partition by Priority_num order by Purchased_amount desc) as rn_amount from customer) as a
+ where rn_amount<=3;
+ +-----------+-----------+--------------+------------------+
+| Cust_Name | City      | Priority_num | Purchased_amount |
++-----------+-----------+--------------+------------------+
+| james     | chennai   |            1 |            10000 |
+| ricky     | chennai   |            1 |             8000 |
+| ramu      | bangalore |            1 |             8000 |
+| jyothi    | hyderabad |            2 |             9000 |
+| akilan    | hyderabad |            2 |             6000 |
+| dinesh    | mumbai    |            2 |             6000 |
++-----------+-----------+--------------+------------------+
+6 rows in set (0.00 sec)
+
+
+8)select s.salesman_name,s.city,s.monthly_target,case  when c.purchased_amount is null then 0 else sum(c.purchased_amount) end as amount_purchase_by_customer from customer c right join sales s on c.salesman_id=s.salesman_id group by c.salesman_id having amount_purchase_by_customer < (select avg(monthly_target) from sales);
++---------------+-----------+----------------+-----------------------------+
+| salesman_name | city      | monthly_target | amount_purchase_by_customer |
++---------------+-----------+----------------+-----------------------------+
+| john          | chennai   |          10000 |                       10000 |
+| abraham       | bangalore |          21000 |                        8000 |
+| srinath       | mumbai    |           9000 |                        9000 |
+| vijay         | chennai   |           4000 |                        5000 |
+| balaji        | hyderabad |          15000 |                           0 |
++---------------+-----------+----------------+-----------------------------+
+5 rows in set (0.00 sec)
+
+
+9)
+
