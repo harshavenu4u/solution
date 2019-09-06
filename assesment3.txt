@@ -1,0 +1,42 @@
+1) select e.emp_id,e.emp_name,coalesce(d.desc_name,"others"),coalesce(p.place_desc,"others"),count(*)over(partition by d.desc_name) as emp_desc_cnt,
+    ->  count(*)over(partition by p.place_desc) as emp_place_cnt from employee e left join designation d
+    ->  on e.desc_id=d.desc_id left join place1 p on e.place_id=p.place_id left join project pi on e.proj_id=pi.proj_id;
++--------+-------------+--------------------------------+---------------------------------+--------------+---------------+
+| emp_id | emp_name    | coalesce(d.desc_name,"others") | coalesce(p.place_desc,"others") | emp_desc_cnt | emp_place_cnt |
++--------+-------------+--------------------------------+---------------------------------+--------------+---------------+
+|     14 | Sanjay      | others                         | others                          |            5 |             5 |
+|     11 | Tamilselvan | others                         | others                          |            5 |             5 |
+|     12 | Vinodha     | others                         | others                          |            5 |             5 |
+|     15 | Meera       | others                         | others                          |            5 |             5 |
+|     10 | Ajay        | AM                             | others                          |            1 |             5 |
+|      8 | Shalini     | SE                             | Bangalore                       |            3 |             2 |
+|      4 | Santhosh    | SSE                            | Bangalore                       |            2 |             2 |
+|      1 | Vijaykumar  | ASE                            | Chennai                         |            3 |             2 |
+|      9 | Avantika    | SSE                            | Chennai                         |            2 |             2 |
+|      7 | Suganya     | ASE                            | Hyderabad                       |            3 |             3 |
+|      5 | Kribakaran  | SE                             | Hyderabad                       |            3 |             3 |
+|      2 | Raja        | SE                             | Hyderabad                       |            3 |             3 |
+|      3 | Abhishek    | ASE                            | Mexico                          |            3 |             1 |
+|     13 | Karthick    | others                         | Newyork                         |            5 |             2 |
+|      6 | Divya       | TL                             | Newyork                         |            1 |             2 |
++--------+-------------+--------------------------------+---------------------------------+--------------+---------------+
+15 rows in set (0.11 sec)
+
+2) select e.emp_id,e.emp_name,coalesce(d.desc_name,"others") as desc_name,coalesce(p.place_desc,"others") as place_desc,pi.proj_id
+   from employee e left join designation d
+   on e.desc_id=d.desc_id left join place1 p on e.place_id=p.place_id
+   left join project pi on e.proj_id=pi.proj_id  where  pi.proj_name like  "%data%" or pi.proj_name like  "%cloud%";
+
+3) select emp_id,emp_name,desc_id,place_desc,proj_name from
+   (select e.emp_id,e.emp_name,d.desc_id,p.place_desc,pi.proj_name,
+   dense_rank() over (partition by p.place_id order by d.desc_id desc,pi.proj_id) as max from employee e  join designation d
+   on e.desc_id=d.desc_id  join place1 p on e.place_id=p.place_id
+    join project pi on e.proj_id=pi.proj_id)a where max=1;
+
+4) select manager_name,custname from (select s1.salesman_name as manager_name,c.cust_name as custname,
+dense_rank() over(partition by s1.salesman_name order by c.purchased_amount) as a from sales
+as s1 join sales s2 on s1.salesman_id=s2.sales_manager_id join customer c on s2.salesman_id=c.salesman_id)b where a=1;
+
+5)update sales s join 
+(select salesman_id,max(purchased_amount) as max_amount from customer group by salesman_id) a on s.salesman_id=a.salesman_id set s.monthly_target=a.max_amount;
+   
