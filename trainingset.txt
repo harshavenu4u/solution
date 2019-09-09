@@ -22,7 +22,13 @@ create table publisher(publish_id varchar(5) primary key,publish_name varchar(25
 
 1) select * from publisher as p inner join author as a on p.publish_id=a.publish_id where p.publish_city<>a.author_city and p.publish_city=a.author_country;
 
-2)
+2)select a.author_name,a.author_country, c.publish_city, c.publish_start_date,c. branches from author as a inner join publisher as p 
+on a.PUBLISH_ID=p.PUBLISH_ID inner join (
+select p.PUBLISH_ID,p.publish_city,p.publish_start_date,p.branches,
+dense_rank() over (partition by substring(year(p.publish_start_date),1,2) 
+order by branches desc) as dr_year from publisher as p) as c on c.PUBLISH_ID=p.PUBLISH_ID
+where c.dr_year=1;
+
 
 3) select a.author_id,a.author_name,a.author_country,a.author_city ,p. publish_name,p.publish_name,p.publish_city  from publisher p join author a on p.publish_id=a.publish_id where author_country in
  (select author_country from publisher p join author a on p.publish_id=a.publish_id where a.author_city=p.publish_city);
@@ -36,7 +42,11 @@ create table publisher(publish_id varchar(5) primary key,publish_name varchar(25
 +-----------+----------------+----------------+---------------+-----------------------+-----------------------+--------------+
 4 rows in set (0.00 sec)
 
-4)
+4)select AUTHOR_ID, AUTHOR_NAME,case when AUTHOR_CITY='Berlin' then 'EUROPE'
+  end as AUTHOR_COUNTRY, AUTHOR_CITY, PUBLISH_ID from(
+  select a.* from author as a inner join author as a1
+  on a.AUTHOR_CITY=a1.AUTHOR_CITY and a.AUTHOR_COUNTRY!=a1.AUTHOR_COUNTRY) as a;
+
 
 5)select a.author_name from author as a left join  publisher as p on p.publish_city=a.author_city or p.publish_city=a.author_country where p.publish_city is null;
 +----------------------+
@@ -73,26 +83,21 @@ create table publisher(publish_id varchar(5) primary key,publish_name varchar(25
 | mary coffing         |
 +----------------------+
 
-9)
+9)select a.* from author as a where lower(substr(a.author_country,2)) like binary substr(a.author_country,2) ;
+
+10) select a.author_id,a.author_name,a.author_country,a.author_city ,p. publish_name,p.publish_name,p.publish_city  from publisher p join author a on p.publish_id=a.publish_id inner join (select max(p.PUBLISH_START_DATE) as max_date from author as a inner join publisher as p on a.publish_id=p.publish_id) as g where g.max_date=p.publish_start_date;
++-----------+-------------+----------------+-------------+--------------------------+--------------------------+--------------+
+| author_id | author_name | author_country | author_city | publish_name             | publish_name             | publish_city |
++-----------+-------------+----------------+-------------+--------------------------+--------------------------+--------------+
+| aut008    | andrew jeff | germany        | berlin      | summer night publication | summer night publication | canada       |
++-----------+-------------+----------------+-------------+--------------------------+--------------------------+--------------+
+1 row in set (0.04 sec)
 
 
 
 
-							DataSet-2
+						
 
 
 
 
-create table trip(trip_id varchar(5),trip_source char(5),trip_destination char(5),trip_start_time time,trip_end_time time,trip_cost int(8),dynamic_fare char(2));
-
-insert into trip values("tp01","CHN","BGL","13:40","15:40",3500,"Y");
-insert into trip values("tp02","BGL","MUM","18:20","19:20",6700,"Y");
-insert into trip values("tp03","CHN","HYD","9:45","11:10",3000,"Y");
-insert into trip values("tp04","HYD","BGL","12:20","13:25",2700,"N");
-insert into trip values("tp05","MUM","NDL","23:00","1:25",4500,"Y");
-insert into trip values("tp06","BGL","NDL","19:40","22:10",5000,"N");
-insert into trip values("tp07","NDL","MUM","16:45","17:50",6000,"Y");
-insert into trip values("tp08","MUM","BGL","20:20","23:45",5000,"N");
-insert into trip values("tp09","NDL","HYD","11:25","13:45",3000,"N");
-insert into trip values("tp10","HYD","CHN","20:30","22:20",4500,"Y");
-insert into trip values("tp11","BGL","CHN","23:45","1:05",3900,"Y");
