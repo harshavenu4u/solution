@@ -105,3 +105,67 @@ select t1.*, case when t1.TRIP_START_TIME>t1.TRIP_END_TIME then timediff('24:00:
             trip as t1  where DYNAMIC_FARE='N') as a) as b where time_taken_order=1;
 
 
+							dataset 3
+
+1)select * from(select st.city,temp_farenheit,rain_inch,dense_rank() over(partition by stats_id order by temp_farenheit desc)as a from stats s  join station st on s.stats_id=st.station_id)as s where a=1;
++---------+----------------+-----------+---+
+| city    | temp_farenheit | rain_inch | a |
++---------+----------------+-----------+---+
+| Phoenix |          100.3 |     10.34 | 1 |
+| Denever |           74.8 |      2.11 | 1 |
+| Caribou |           65.8 |      4.52 | 1 |
++---------+----------------+-----------+---+
+3 rows in set (0.00 sec)
+2)select st.station_id,st.city,st.state,s.month,s.year,round((temp_farenheit-32)*(5/9),2) as celcius ,round((s.rain_inch*03937),2) as cm from station st join stats s on st.station_id=s.stats_id;
++------------+---------+-------+-------+------+---------+----------+
+| station_id | city    | state | month | year | celcius | cm       |
++------------+---------+-------+-------+------+---------+----------+
+|         13 | Phoenix | AZ    |     1 | 2010 |   14.11 |  1220.47 |
+|         13 | Phoenix | AZ    |     5 | 2010 |   33.17 | 20275.55 |
+|         13 | Phoenix | AZ    |    12 | 2010 |  -10.78 | 32834.58 |
+|         13 | Phoenix | AZ    |     9 | 2010 |   37.94 | 40708.58 |
+|         44 | Denever | CO    |     9 | 2010 |   -2.67 | 13582.65 |
+|         44 | Denever | CO    |     2 | 2010 |   -2.61 |   708.66 |
+|         44 | Denever | CO    |     6 | 2010 |   23.78 |  8307.07 |
+|         66 | Caribou | ME    |     3 | 2010 |  -14.06 |  8267.70 |
+|         66 | Caribou | ME    |     7 | 2010 |   18.78 | 17795.24 |
++------------+---------+-------+-------+------+---------+----------+
+9 rows in set (0.00 sec)
+3)
+4)mysql> select city,state,rain_inch,avg_rain,avg_temp from
+    -> (select city,state,temp_farenheit,rain_inch,avg_rain,avg_temp,dense_rank() over(partition by state order by avg_rain desc,avg_temp desc) rank_avg from
+    -> (select city,state,temp_farenheit,rain_inch,avg(rain_inch) over() as avg_rain,avg(temp_farenheit) over() as avg_temp from
+    -> stats s join station s1 on s.stats_id=s1.station_id) as rain_temp where avg_rain<rain_inch and avg_temp > temp_farenheit) as max_rain where rank_avg=1;
++---------+-------+-----------+-------------------+------------------+
+| city    | state | rain_inch | avg_rain          | avg_temp         |
++---------+-------+-----------+-------------------+------------------+
+| Phoenix | AZ    |      8.34 | 4.055555582046509 | 51.5333342022366 |
++---------+-------+-----------+-------------------+------------------+
+1 row in set (0.00 sec)
+
+5)
+6)
+7)
+8)
+9)select * from(select st.station_id,st.city,st.state,s.month,s.year,round((temp_farenheit-32)*(5/9),2) as observed_temp ,round((s.rain_inch*03937),2) as cm from station st join stats s on st.station_id=s.stats_id) as a where observed_temp<0;
++------------+---------+-------+-------+------+---------------+----------+
+| station_id | city    | state | month | year | observed_temp | cm       |
++------------+---------+-------+-------+------+---------------+----------+
+|         13 | Phoenix | AZ    |    12 | 2010 |        -10.78 | 32834.58 |
+|         44 | Denever | CO    |     9 | 2010 |         -2.67 | 13582.65 |
+|         44 | Denever | CO    |     2 | 2010 |         -2.61 |   708.66 |
+|         66 | Caribou | ME    |     3 | 2010 |        -14.06 |  8267.70 |
++------------+---------+-------+-------+------+---------------+----------+
+4 rows in set (0.00 sec)
+10)mysql> select stats_id,month,year,temp_farenheit,rain_inch from stats having rain_inch>(select avg(rain_inch) from stats);
++----------+-------+------+----------------+-----------+
+| stats_id | month | year | temp_farenheit | rain_inch |
++----------+-------+------+----------------+-----------+
+|       13 |     5 | 2010 |           91.7 |      5.15 |
+|       13 |    12 | 2010 |           12.6 |      8.34 |
+|       13 |     9 | 2010 |          100.3 |     10.34 |
+|       66 |     7 | 2010 |           65.8 |      4.52 |
++----------+-------+------+----------------+-----------+
+4 rows in set (0.00 sec)
+
+
