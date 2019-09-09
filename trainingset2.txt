@@ -50,6 +50,13 @@ where t1.trip_source="CHN" and t3.trip_destination="NDL")a)b where rank1=1;
 1 row in set (0.00 sec)
 
 
+3)select t1.TRIP_SOURCE,t1.TRIP_DESTINATION as 1st_connect,t2.TRIP_DESTINATION as 2nd_connect,t3.TRIP_DESTINATION,
+t1.TRIP_COST+t2.TRIP_COST+t3.TRIP_COST AS Total_Cost
+from trip as t1 inner join trip as t2 on
+t1.TRIP_DESTINATION=t2.TRIP_SOURCE and   t1.TRIP_SOURCE='CHN' and t1.DYNAMIC_FARE='Y'
+ inner join trip as t3 on
+t2.TRIP_DESTINATION=t3.TRIP_SOURCE
+ AND t3.TRIP_DESTINATION='NDL' and t2.DYNAMIC_FARE='Y' and t3.DYNAMIC_FARE='Y';
 
 4)
 select t1source,t3destination,time from
@@ -76,17 +83,25 @@ where t1.trip_source="CHN" and t3.trip_destination="NDL") as a where time>0;
      where t1.trip_source="CHN" and t3.trip_destination="NDL")a)b where rank1=1;
 
 
- select t1source,t3destination,total_wait_time from ( 
- select t1source,t3destination,addtime(wtime1,wtime2) as total_wait_time,dense_rank() over (order by addtime(wtime1,wtime2) as wait_time from 
- (select  t1.trip_source as t1source,t1.trip_destination as t1destination,t2.trip_destination as t2destination,t3.trip_destination as t3destination,timediff(t2.trip_start_time,t1.trip_end_time)
- as wtime1,timediff(t3.trip_start_time,t2.trip_end_time) as wtime2 from trip t1 inner join trip t2 on t1.trip_destination=t2.trip_source
- inner join trip t3 on t2.trip_destination=t3.trip_source where t1.trip_source="CHN" and t3.trip_destination="NDL")a)b where wait_time=1;
+
+7)select t1.TRIP_SOURCE,t2.TRIP_SOURCE,t2.TRIP_DESTINATION  
+from trip as t1 inner join trip as t2 on
+t1.TRIP_DESTINATION=t2.TRIP_SOURCE and t1.TRIP_START_TIME<'11:00:00'
+and t1.TRIP_SOURCE='CHN' AND t2.TRIP_DESTINATION='BGL';
 
 
-select t1source,t3destination,addtime(wtime1,wtime2),dense_rank()over(order by addtime(wtime1,wtime2)) from (select t1.trip_source as t1source,t1.trip_destination as t1destination,t2.trip_destination as t2destination,t3.trip_destination as t3destination,timediff(t2.trip_start_time,t1.trip_end_time)
- as wtime1,timediff(t3.trip_start_time,t2.trip_end_time) as wtime2 from trip t1 inner join trip t2 on t1.trip_destination=t2.trip_source
- inner join trip t3 on t2.trip_destination=t3.trip_source where t1.trip_source="CHN" and t3.trip_destination="NDL")a
-
-
+9)
+select TRIP_ID, TRIP_SOURCE, TRIP_DESTINATION, TRIP_START_TIME, TRIP_END_TIME, TRIP_COST, DYNAMIC_FARE,travel_time from(
+select *,dense_rank() over (order by travel_time) as time_taken_order from(
+select t1.*, case when t1.TRIP_START_TIME>t1.TRIP_END_TIME then timediff('24:00:00',timediff(t1.TRIP_START_TIME,t1.TRIP_END_TIME))
+			when t1.TRIP_START_TIME<t1.TRIP_END_TIME then timediff(t1.TRIP_END_TIME,t1.TRIP_START_TIME) end as travel_time from
+            trip as t1 ) as a) as b where time_taken_order=1;
+            
+10.Fetch trip details which have high travel time and no dynamic pricing
+select TRIP_ID, TRIP_SOURCE, TRIP_DESTINATION, TRIP_START_TIME, TRIP_END_TIME, TRIP_COST, DYNAMIC_FARE,travel_time from(
+select *,dense_rank() over (order by travel_time desc) as time_taken_order from(
+select t1.*, case when t1.TRIP_START_TIME>t1.TRIP_END_TIME then timediff('24:00:00',timediff(t1.TRIP_START_TIME,t1.TRIP_END_TIME))
+			when t1.TRIP_START_TIME<t1.TRIP_END_TIME then timediff(t1.TRIP_END_TIME,t1.TRIP_START_TIME) end as travel_time from
+            trip as t1  where DYNAMIC_FARE='N') as a) as b where time_taken_order=1;
 
 
