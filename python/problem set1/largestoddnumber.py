@@ -1,4 +1,9 @@
-'''
+
+'''Write a program that examines three variables—x, y, and z— and
+prints the largest odd number among them. If none
+of them are odd, it should print a message to that effect.'''
+
+
 x=int(input("enter x values"))
 y=int(input("enter y values"))
 z=int(input("enter z values"))
@@ -16,13 +21,10 @@ for i in list1:
 if max>0:
     print(max)
 else:
-    print("all are even numbers")'''
+    print("all are even numbers")
 
 
-def right_justify(S):
-   return " "*70+S
 
-print(right_justify("cigna"))
 
 
 
