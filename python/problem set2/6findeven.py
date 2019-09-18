@@ -9,9 +9,9 @@ def findAnEven(l):
         if i%2==0:
             return i
     else:
-        return ValueError
+        raise ValueError
 
-list1=[1,2,3,55,1095]
+list1=[1,3,55,1095]
 try:
     print(findAnEven(list1))
 
