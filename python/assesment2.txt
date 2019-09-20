@@ -1,0 +1,96 @@
+
+1)Write a Python program to combine each line from first file with the corresponding line in second file
+
+file1=open("abc.txt","r")
+file1.read()
+file2=open("abc.txt","w")
+file2.write()
+file2=open("test.txt","a")
+file2.append(file1)
+print(file2)
+file2.close()
+
+
+
+2)Count new lines in file
+
+
+
+3)rite a Python function that accepts a string and calculate the number of upper case letters and lower case letters.
+Sample String : 'The quick Brow Fox'
+Expected Output : 
+No. of Upper case characters : 3
+No. of Lower case Characters : 12
+
+def case(string):
+uppercasecount=0
+lowercasecount=0
+      for i in string:
+	   if ord(i)>=65 and ord(i)<=95:
+		uppercasecount+=i
+		print(uppercasecount)
+	   elif ord(i)>=96 and ord(i)<=122:
+		lowercasecount+=i	
+		print(lowecasecount)
+	  else:
+                print("is is not a upper or lower case letter")	
+                
+
+string1=input("enter a string")
+case(string1)      
+
+4)Write a Python function that takes a list and returns a new list with unique elements of the first list. 
+Without using set
+Sample List : [1,2,3,3,3,3,4,5]
+Unique List : [1, 2, 3, 4, 5]
+
+def reduce(l):
+list2=[]
+	for i in l:
+	    if i not in list2:
+		list2.append(i)
+	return list2    
+
+
+
+list1=[1,2,3,3,3,3,4,5]
+reduce(list1)
+
+5)Write a Python function to check whether a string is a pangram or not. 
+Note : Pangrams are words or sentences containing every letter of the alphabet at least once.
+For example : "The quick brown fox jumps over the lazy dog"
+
+def pangram(s):
+   alphabets=['a','b','c','d','e','f','g,'h,'j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+	for i in s:
+	     if i not in alphabets:
+	     return False
+	return True
+
+string1=input("enter a string").lower()
+check=pangram(string1)
+if check:
+	print("it is pangram")
+else:
+        print("it is not pangram")
+
+
+
+6)Write a Python program that accepts a hyphen-separated sequence of words as input 
+and prints the words in a hyphen-separated sequence after sorting them alphabetically. 
+
+
+Sample Items : green-red-yellow-black-white
+Expected Result : black-green-red-white-yellow
+
+list1=input("enter a string:\n").split('-')
+list1.sort()
+string1=''
+for i in list1:
+ string1=string1+i+'-'
+print(string1)
+
+
+
+
+
