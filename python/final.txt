@@ -1,0 +1,70 @@
+1)
+class Invalidformatexception(Exception):
+  pass
+
+def filetype(type):
+  list1=["jpg","jepg","png","gif"]
+  if(type in list1):
+       raise Invalidformatexception
+  else:
+    print("it is image format file")     
+
+try:
+  out=input("please enter the file name here").split('.')
+  filetype(out[1])
+
+except Invalidformatexception as e:
+  print("it is not image format file")
+
+finally:
+  print("done")              
+
+2)class banking:
+  def __init__(self,name,age,balance):
+    self.name=name
+    self.age=age
+    self.balance=balance
+
+  def new_user(self):
+    offer=1000
+    self.balance=self.balance+offer
+    print(self.name)
+    print(self.age)
+    print("update balance is ",self.balance)
+
+banker=banking("venu",23,0)
+banker.new_user()
+
+3)import mysql.connector
+
+
+def extract(id):
+    try:
+        con = mysql.connector.connect(host='localhost', user='root', password='root', database='db_name')
+        my_cursor = con.cursor()
+        query = "select * from employee where %s"
+        my_cursor.execute(query, id)
+        result = my_cursor.fetchall()
+        return result
+    except mysql.Error as e:
+        print(e)
+    finally:
+        my_cursor.close()
+        conn.close()
+
+
+
+file=open('sample.txt','r')    
+string = file.read()
+with open('result.xsl', 'w') as write_file:
+        for ids in string[0]:
+            write_file.write(extract(ids))
+
+
+
+4)import re
+file=open("sample1.txt","r")
+f1=file.readlines()
+for i in f1:
+ string=re.search(r'\d{1,9}.\d{1,9}.\d{1,9}.\d{1,9}',i)
+ print(string.group())
