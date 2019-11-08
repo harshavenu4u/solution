@@ -1,0 +1,227 @@
+1:For the below binary number , count the Occurrence of sequence '101'
+10101010100111101
+
+
+# string=input("enter a string")
+# count=0
+# for i in range(0,len(string)-2):
+#     if string[i]=="1":
+#         if string[i+1]=="0" and string[i]=="1":
+#             count=count+1
+# print(count)
+
+
+==============================================================================================================
+2: For the below matrix , calculate both the diagonal and print the value.(Hint: consider each row as a list object)
+
+ 
+
+3 8 7
+
+8 7 9
+
+1 6 0
+
+
+
+
+def printDiagonal(mat, n):
+    first=0
+    second=0
+    for i in range(0,n):
+        for j in range(0,n):
+            if(i==j):
+                first=first+mat[i][j]
+
+            if((i+j==n-1)):
+               second=second+mat[i][j]
+
+    print(first)
+    print(second)
+
+a = [[3,8,7],[8,7,9],[1,6,0]]
+printDiagonal(a,3)
+
+ 
+
+ 
+==============================================================================================================
+3 :Rotate the above matrix by 90 degree anticlockwise
+
+hint :convert row to column and column to row
+
+m = [[3,8,7],[8,7,9],[1,6,0]]
+new_matrix = [[m[j][i] for j in range(len(m))] for i in range(len(m[0])-1,-1,-1)]
+print(new_matrix)
+ 
+
+ 
+==============================================================================================================
+4: The string abcabcabc........ goes till 1111 . print the number of Occurrence of 'ca'
+
+ str1="abc"
+str2=str1*370+"a"
+print(str2.count("ca"))
+
+
+ 
+==============================================================================================================
+5: Convert the string as below.
+
+input : abcDEwQ
+
+output: ABCdeWq
+
+
+SOL:string1=input("enter a string")
+string2=""
+for i in string1:
+    if i.islower():
+        string2=string2+i.upper()
+    else:
+        string2=string2+i.lower()
+        
+print(string2)   
+
+string1=input("enter a string")
+x=string1.swapcase()
+print(x)
+
+ 
+
+ 
+==============================================================================================================
+6: Find the ordered longest alphabetical sequence.
+abccdefabcdefae
+
+
+str1=input("enter a string")
+a=str1[0]
+b=str1[0]
+for i in range(len(str1)-1):
+    if str1[i]<=str1[i+1]:
+        a+=str1[i+1]
+        if len(a)>len(b):
+            b=a
+    else:
+        a=str1[i+1]
+print(b)
+
+ 
+==============================================================================================================
+7:Find the sum of multiples of 3 and 5 between 1 to 1000
+
+# def sumofmultiples():
+#     sum=0
+#     for i in range(1,1000):
+#         if i%3==0 or i%5==0:
+#             sum+=i
+#     print(sum)
+#
+# sumofmultiples()
+
+ 
+
+ 
+==============================================================================================================
+8: Display the phone number as below and also print the last 4 digit in ascending order
+
+input : 9993452133
+
+output :xxx-xxx-xxxx
+
+string1=input("enter a number;\n")
+string2=''
+list1=[]
+for i in range(0,len(string1)-4):
+  string2+=string1[i]
+  if i==2 or i==5:
+    string2+='-'
+for i in range(6,len(string1)):
+  list1.append(int(string1[i]))
+list1.sort()
+for i in list1:
+  string2+=str(i)
+print(string2)
+
+
+ 
+
+ 
+==============================================================================================================
+9: "There are 26 alphabets in English out of which 5 are vowels and 21 are consonants"
+
+Count the sum of numbers in the above statement using regular expression
+
+
+# def sumofmultiples():
+#     sum=0
+#     for i in range(1,1000):
+#         if i%3==0 or i%5==0:
+#             sum+=i
+#     print(sum)
+#
+# sumofmultiples()
+
+ 
+==============================================================================================================
+
+10.anagram : sample inputs : tear, rate ; Find if these words are anagram or not. Program should accept two inputs from user.
+
+
+# def sumofmultiples():
+#     sum=0
+#     for i in range(1,1000):
+#         if i%3==0 or i%5==0:
+#             sum+=i
+#     print(sum)
+#
+# sumofmultiples()
+ 
+==============================================================================================================
+11;With a given integral number n, change the program to generate a dictionary that contains (i, cube of i) such that is an integral number between 1 and n (both included).
+
+and then the program should print the dictionary.
+
+Suppose the following input is supplied to the program:
+
+7
+
+Then, the output should be:
+
+{1: 1, 2: 8, 3: 27, 4: 64, 5: 125, 6: 216, 7: 373}
+
+Take the input from the user via console.
+
+
+number=int(input("enter a range"))
+dict={}
+for i in range(1,number+1):
+    dict[i]=i**3
+print(di
+
+ 
+
+ 
+==============================================================================================================
+12: find if the below numbers are Armstrong number
+
+number = int(input("Enter a number: "))
+sum = 0
+
+temp = number
+while temp > 0:
+   digit = temp % 10
+   sum += digit ** 3
+   temp //= 10
+
+if number == sum:
+   print(num,"is an Armstrong number")
+else:
+   print(num,"is not an Armstrong number")
+
+a: 153
+
+b:1634
+
+c: 876
