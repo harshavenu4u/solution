@@ -154,30 +154,36 @@ print(string2)
 Count the sum of numbers in the above statement using regular expression
 
 
-# def sumofmultiples():
-#     sum=0
-#     for i in range(1,1000):
-#         if i%3==0 or i%5==0:
-#             sum+=i
-#     print(sum)
+# import re
+# string1= "There are 26 alphabets in English out of which 5 are vowels and 21 are consonants"
+# x=re.findall("\d+",string1)
+# print(x)
+# sum=0
+# for char in x:
+#     sum=sum+int(char)
+# print(sum)
+
+=================================================================================================================================
+#10)anagram : sample inputs : tear, rate ; Find if these words are anagram or not. Program should accept two inputs from user.
+
+# def is_anagram(str1,str2):
+#     if len(str1)!=len(str2):
+#         return False
 #
-# sumofmultiples()
-
- 
-==============================================================================================================
-
-10.anagram : sample inputs : tear, rate ; Find if these words are anagram or not. Program should accept two inputs from user.
-
-
-# def sumofmultiples():
-#     sum=0
-#     for i in range(1,1000):
-#         if i%3==0 or i%5==0:
-#             sum+=i
-#     print(sum)
+#     if sorted(str1)==sorted(str2):
+#         return True
+#     else:
+#         return  False
 #
-# sumofmultiples()
- 
+#
+# first=input("enter first string")
+# second=input("enter second string")
+# check=is_anagram(first,second)
+# if check:
+#     print("it is anagram")
+#
+# else:
+#     print("not anagram")
 ==============================================================================================================
 11;With a given integral number n, change the program to generate a dictionary that contains (i, cube of i) such that is an integral number between 1 and n (both included).
 
